@@ -1,5 +1,5 @@
 var fwd = require('fwd-stream');
-var sublevel = require('level-sublevel');
+var sublevel = require('subleveldown');
 var blobs = require('level-blobs');
 var peek = require('level-peek');
 var once = require('once');
@@ -19,11 +19,9 @@ var noop = function() {};
 module.exports = function(db, opts) {
 	var fs = {};
 
-	db = sublevel(db);
-
-	var bl = blobs(db.sublevel('blobs'), opts);
-	var ps = paths(db.sublevel('stats'));
-	var links = db.sublevel('links');
+	var bl = blobs(sublevel(db, 'blobs'), opts);
+	var ps = paths(sublevel(db, 'stats'));
+	var links = sublevel(db, 'links');
 
 	var listeners = watchers();
 	var fds = [];
